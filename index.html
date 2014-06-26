@@ -1,109 +1,67 @@
 <!DOCTYPE html>
 <html>
-<head>
-<meta charset="ISO-8859-1">
-<title>Dynamic Ad</title>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <style type="text/css">
+      html { height: 100% }
+      body { height: 100%; margin: 0; padding: 0 }
+      #map-canvas { height: 100% }
+    </style>
 
-<script src="js/jquery-1.7.1.min.js"></script>
-<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true"></script>
-<script type="text/javascript">
-var map;
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js"></script>
 
-function initialize() {
+    <script type="text/javascript">
+      var map;
 
-  // Try HTML5 geolocation
-  if(navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(function(position) {
-      var screenSize="400x300";
-    $("#lat").val(position.coords.latitude);
-    $("#lon").val(position.coords.longitude);
-    GetAd(data.latitude,data.longitude,screenSize);
+      showMarker = function(lat, lng) {
+        $('#lat').val(lat);
+        $('#lng').val(lng);
+        var latLng = new google.maps.LatLng(lat, lng);
+        new google.maps.Marker({
+          position: latLng,
+          map: map
+        });
+        map.setCenter(latLng);
+        map.setZoom(13);
+      };
 
-    }, function() {
-      handleNoGeolocation(true);
-    });
-  } else {
-    // Browser doesn't support Geolocation
-    handleNoGeolocation(false);
-  }
-}
+      showOtherDetailsInForm = function(screenSize, orientation) {
+        $('#currentScreensize').html(screenSize);
+        $('#orientation').html(orientation);
+      };
 
-function handleNoGeolocation(errorFlag) {
-  if (errorFlag) {
-    var content = 'Error: The Geolocation service failed.';
-  } else {
-    var content = 'Error: Your browser doesn\'t support geolocation.';
-  }
+      function initializeMaps() {
+        var mapOptions = {
+          center: new google.maps.LatLng(-28.4792625, 24.6727135),
+          zoom: 6
+        };
+        map = new google.maps.Map(document.getElementById("map-canvas"),
+            mapOptions);
+      }
 
-  var options = {
-    map: map,
-    position: new google.maps.LatLng(60, 105),
-    content: content
-  };
+      google.maps.event.addDomListener(window, 'load', initializeMaps);
+    </script>
 
-  var infowindow = new google.maps.InfoWindow(options);
-  map.setCenter(options.position);
-}
+    <script type="text/javascript" src="./vicinity.js"></script>
+    <script type="text/javascript">
+      new Vicinity (function(result) {
+        $(function() {
+          $("#ad").html(result.ad.getBannerHtml());
 
-google.maps.event.addDomListener(window, 'load', initialize);
+          showMarker(result.lat, result.lng);
+          showOtherDetailsInForm(result.screensize, result.orientation);
+        })
+      });
+    </script>
 
-
-function GetAd(lat,lon,screenSize){
-
-$.ajax({
-    type: 'POST',
-    contentType: 'application/xml',
-    url: "Api/xml-api/getAd",
-    dataType: "xml",
-    data: formToXml(lat,lon,screenSize),
-    success: function (data) {
-            $(data).find('rAdContent').each(function () {
-
-
-                var landingurl = $(this).find('landingurl').text();
-                var imgSrc = $(this).find('imgSrc').text();
-                var width = $(this).find('width').text()
-                var height = $(this).find('height').text()
-                var introbanner='<a href='+landingurl+'><img src='+imgSrc+' width='+width+' height='+height+'  /></a>';
-                $("#getad").html(introbanner);
-            });
-        },
-        error: function (xhr) {
-          $("#getad").html("Ad not found ! Please contact to Ad Manager");
-       }
-
-
-});
-}
-
-function Go(){
-
-   GetAd($("#lat").val(),$("#lon").val(),$("#screensize").val());
-
-}
-
-
-function formToXml(lat,lon,screenSize) {
-
-   var xmlStr ="<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
-            + "<AdRequest>"
-            + "<type>html</type><pubReference>xx</pubReference><advReference>adresfsghdkkf</advReference>"
-            + "<ScreenSize>"+screenSize+"</ScreenSize><bannerWidth></bannerWidth><bannerHeight></bannerHeight>"
-            + "<virtSize>0</virtSize><horiSize>?</horiSize><formatUrl>?</formatUrl>"
-            + "<refresh>30</refresh><longitude>"+lon+"</longitude><latitude>"+lat+"</latitude>"
-            + "<encryptType>?</encryptType><networkId>?</networkId><imei>357559048224673</imei>"
-            + "<msisdn>27828781462</msisdn><socialType>FB</socialType><orientation>bottom</orientation>"
-            + "</AdRequest>";
-
-  return xmlStr;
-}
-
-</script>
-</head>
-<body>
-Screen size: <select name="screensize" id="screensize"><option value="280x178">280x178</option><option value="320x216">320x216</option><option value="440x254">440x254</option><option value="440x245">440x245</option><option value="254x144">254x144</option></select>
- Latitude: <input type="text" name="lat" id="lat" value="">  Longitude: <input type="text" name="lon" id="lon" value=""> <input type="button" value="Go" onclick="Go();"/>
-
-<div id=getad></div>
-</body>
+  </head>
+  <body>
+    <section>
+      Screen size: <select name="screensize" id="screensize"><option value="280x178">280x178</option><option value="320x216">320x216</option><option value="440x254">440x254</option><option value="440x245">440x245</option><option value="254x144">254x144</option></select> (<span id="currentScreensize"></span> <span id="orientation"></span>)
+       Latitude: <input type="text" name="lat" id="lat">  Longitude: <input type="text" name="lng" id="lng"> <input type="button" value="Go"/>
+    </section>
+    <div id="ad"></div>
+    <div id="map-canvas"/>
+  </body>
 </html>
