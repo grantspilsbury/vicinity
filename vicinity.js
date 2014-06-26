@@ -58,7 +58,7 @@ var Vicinity = function(done) {
     $.ajax({
       type: 'POST',
       contentType: 'application/xml',
-      url: "//ad.vic-m.co:8080/AdService/Api/xml-api/getAd",
+      url: "http://ad.vic-m.co:8080/AdService/Api/xml-api/getAd",
       dataType: "xml",
       data: vicinity.formToXml(vicinity.lat, vicinity.lng, vicinity.screenSize),
       success: function (data) {
