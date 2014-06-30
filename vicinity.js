@@ -64,20 +64,55 @@ var geoPosition=function() {
 
         var pub = {};
         var provider=null;
-        var u="undefined";
+    var u="undefined";
+        var ipGeolocationSrv = 'http://freegeoip.net/json/?callback=JSONPCallback';
 
         pub.getCurrentPosition = function(success,error,opts)
         {
                 provider.getCurrentPosition(success, error,opts);
         }
 
+        pub.jsonp = {
+            callbackCounter: 0,
+
+            fetch: function(url, callback) {
+                var fn = 'JSONPCallback_' + this.callbackCounter++;
+                window[fn] = this.evalJSONP(callback);
+                url = url.replace('=JSONPCallback', '=' + fn);
+
+                var scriptTag = document.createElement('SCRIPT');
+                scriptTag.src = url;
+                document.getElementsByTagName('HEAD')[0].appendChild(scriptTag);
+            },
+
+            evalJSONP: function(callback) {
+                return function(data) {
+                    callback(data);
+                }
+            }
+        };
+
+        pub.confirmation = function()
+        {
+            return confirm('This Webpage wants to track your physical location.\nDo you allow it?');
+        };
+
         pub.init = function()
         {
             try
             {
                 var hasGeolocation = typeof(navigator.geolocation)!=u;
+                if( !hasGeolocation ){
+                    if( !pub.confirmation() ){
+                        return false;
+                    }
+                }
 
-                if ( hasGeolocation ) {
+                if ( ( typeof(geoPositionSimulator)!=u ) && (geoPositionSimulator.length > 0 ) ){
+                        provider=geoPositionSimulator;
+                } else if (typeof(bondi)!=u && typeof(bondi.geolocation)!=u  ) {
+                        provider=bondi.geolocation;
+                } else if ( hasGeolocation ) {
                         provider=navigator.geolocation;
                         pub.getCurrentPosition = function(success, error, opts) {
                                 function _success(p) {
@@ -98,16 +133,12 @@ var geoPosition=function() {
                                 }
                                 provider.getCurrentPosition(_success,error,opts);
                         }
-                }
-                else if (typeof(bondi)!=u && typeof(bondi.geolocation)!=u  ) {
-                        provider=bondi.geolocation;
-                }
-                else if(typeof(window.blackberry)!=u && blackberry.location.GPSSupported) {
+                } else if(typeof(window.blackberry)!=u && blackberry.location.GPSSupported) {
                         // set to autonomous mode
-                  if(typeof(blackberry.location.setAidMode)==u) {
-                                  return false;
-                  }
-                  blackberry.location.setAidMode(2);
+            if(typeof(blackberry.location.setAidMode)==u) {
+                            return false;
+            }
+            blackberry.location.setAidMode(2);
                         //override default method implementation
                         pub.getCurrentPosition = function(success,error,opts)
                         {
@@ -208,6 +239,18 @@ var geoPosition=function() {
                         //make the call
                         provider.ILocation.GetLocation(criteria,callback);
                         }
+                } else  {
+                        pub.getCurrentPosition = function(success, error, opts) {
+                                pub.jsonp.fetch(ipGeolocationSrv,
+                                        function( p ){ success( { timestamp: p.timestamp,
+                                                                   coords: {
+                                                                        latitude:   p.latitude,
+                                                                        longitude:  p.longitude,
+                                                                        heading:    p.heading
+                                                                    }
+                                                                });});
+                        }
+                        provider = true;
                 }
             }
             catch (e){
