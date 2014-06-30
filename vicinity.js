@@ -345,7 +345,11 @@ var Vicinity = function(pubReference, done, err) {
       that.lat = position.coords.latitude;
       that.lng = position.coords.longitude;
       that.getAd(pubReference, that, done, err)
-    }, err);
+    }, function() {
+      that.lat = 0;
+      that.lng = 0;
+      that.getAd(pubReference, that, done, err)
+    });
   };
 
   this.init(pubReference, done, err);
