@@ -6,7 +6,8 @@
 
     <script type="text/javascript" src="./vicinity.js"></script>
     <script type="text/javascript">
-      new Vicinity (function(result) {
+      var pubReference = 34;
+      new Vicinity (pubReference, function(result) {
         $(function() {
           $("#ad").html(result.ad.getBannerHtml());
 

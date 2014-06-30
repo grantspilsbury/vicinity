@@ -264,7 +264,7 @@ var geoPosition=function() {
 
 
 
-var Vicinity = function(done) {
+var Vicinity = function(pubReference, done) {
 
   // defaults
   this.lat = 0;
@@ -316,10 +316,10 @@ var Vicinity = function(done) {
     vicinity.orientation = (window.innerHeight > window.innerWidth) ? "portrait" : "landscape";
   };
 
-  this.formToXml = function (lat, lon, screenSize) {
+  this.formToXml = function (pubReference, lat, lon, screenSize) {
     return "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
       + "<AdRequest>"
-      + "<type>html</type><pubReference>34</pubReference><advReference>adresfsghdkkf</advReference>"
+      + "<type>html</type><pubReference>"+pubReference+"</pubReference><advReference>adresfsghdkkf</advReference>"
       + "<ScreenSize>"+screenSize+"</ScreenSize><bannerWidth></bannerWidth><bannerHeight></bannerHeight>"
       + "<virtSize>0</virtSize><horiSize>?</horiSize><formatUrl>?</formatUrl>"
       + "<refresh>30</refresh><longitude>"+lon+"</longitude><latitude>"+lat+"</latitude>"
@@ -328,13 +328,13 @@ var Vicinity = function(done) {
       + "</AdRequest>";
   };
 
-  this.getAd = function (vicinity, done) {
+  this.getAd = function (pubReference, vicinity, done) {
     $.ajax({
       type: 'POST',
       contentType: 'application/xml',
       url: "http://ad.vic-m.co:8080/AdService/Api/xml-api/getAd",
       dataType: "xml",
-      data: vicinity.formToXml(vicinity.lat, vicinity.lng, vicinity.screenSize),
+      data: vicinity.formToXml(pubReference, vicinity.lat, vicinity.lng, vicinity.screenSize),
       success: function (data) {
         $(data).find('rAdContent').each(function () {
           vicinity.ad.landingUrl = $(this).find('landingurl').text();
@@ -350,17 +350,17 @@ var Vicinity = function(done) {
     });
   };
 
-  this.init = function(done) {
+  this.init = function(pubReference, done) {
     var that = this;
     this.getScreenSize(that);
     this.getLatLng(that, function(position) {
       console.log(position);
       that.lat = position.coords.latitude;
       that.lng = position.coords.longitude;
-      that.getAd(that, done)
+      that.getAd(pubReference, that, done)
     });
   };
 
-  this.init(done);
+  this.init(pubReference, done);
 };
 
