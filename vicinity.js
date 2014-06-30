@@ -342,7 +342,6 @@ var Vicinity = function(pubReference, done, err) {
     var that = this;
     this.getScreenSize(that);
     this.getLatLng(that, function(position) {
-      console.log(position);
       that.lat = position.coords.latitude;
       that.lng = position.coords.longitude;
       that.getAd(pubReference, that, done, err)
