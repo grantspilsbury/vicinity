@@ -4,54 +4,6 @@
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 
-    <script "text/javascript">
-
-     // called when location object changes
-     function locationCB()
-     {
-         alert("Latitude "  +
-             blackberry.location.latitude);
-         alert("Longitude " +
-             blackberry.location.longitude);
-         return true;
-     }
-
-     // test to see if the blackberry location API is supported
-     if( window.blackberry && blackberry.location.GPSSupported) {
-           document.write("GPS Supported");
-
-
-           // Set our call back function
-
-           //WRONG: this would call our call back function immediatly, not after the refresh
-           //blackberry.location.onLocationUpdate(locationCB());
-
-           //WRONG: the blackberry browser won't support passing a method.
-           //It will error on refresh and all javascript processing on the page will stop
-           //blackberry.location.onLocationUpdate(locationCB());
-
-
-           // RIGHT: pass a string that calls our method
-           blackberry.location.onLocationUpdate("locationCB()");
-
-           // set to Autonomous mode
-           blackberry.location.setAidMode(2);
-
-           //refresh the location
-           blackberry.location.refreshLocation();
-     }
-     else
-     {
-        if (window.blackberry) {
-          document.write("This Device doesn't support the Blackberry Location API");
-        } else {
-          document.write("This Device doesn't think its a Blackberry");
-        }
-
-     }
-    </script>
-
-
     <script type="text/javascript" src="./vicinity.js"></script>
     <script type="text/javascript">
       var displayResults = function(result) {

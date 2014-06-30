@@ -284,7 +284,7 @@ var Vicinity = function(pubReference, done, err) {
   this.getLatLng = function(vicinity, done, err) {
     if (geoPosition.init()) {  // Geolocation Initialisation
       geoPosition.getCurrentPosition(done, function(e) {
-        console.warn('ERROR(' + e.code + '): ' + e.message);
+        console.warn('ERROR: ' + e.message);
         err(vicinity);
       }, { enableHighAccuracy:true } );
     } else {
@@ -350,4 +350,3 @@ var Vicinity = function(pubReference, done, err) {
 
   this.init(pubReference, done, err);
 };
-
