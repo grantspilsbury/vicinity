@@ -303,7 +303,7 @@ var Vicinity = function(pubReference, sessionId, done, err) {
   };
 
   this.getOrientation = function(vicinity) {
-    vicinity.orientation = (window.innerHeight > window.innerWidth) ? "portrait" : "landscape";
+    vicinity.orientation = (screen.height > screen.width) ? "portrait" : "landscape";
   };
 
   this.formToXml = function (pubReference, sessionId, lat, lon, screenSize) {
