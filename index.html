@@ -42,7 +42,12 @@
      }
      else
      {
-       document.write("This Device doesn't support the Blackberry Location API");
+        if (window.blackberry) {
+          document.write("This Device doesn't support the Blackberry Location API");
+        } else {
+          document.write("This Device doesn't think its a Blackberry");
+        }
+
      }
     </script>
 
