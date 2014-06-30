@@ -271,6 +271,7 @@ var Vicinity = function(pubReference, done, err) {
   this.lng = 0;
   this.screenSize = "";
   this.orientation = "landscape"
+  this.finishedGettingAd = false;
   this.ad = {
     landingUrl: null,
     imgSrc: null,
@@ -316,26 +317,30 @@ var Vicinity = function(pubReference, done, err) {
   };
 
   this.getAd = function (pubReference, vicinity, done, err) {
-    $.ajax({
-      type: 'POST',
-      contentType: 'application/xml',
-      url: "http://ad.vic-m.co:8080/AdService/Api/xml-api/getAd",
-      dataType: "xml",
-      data: vicinity.formToXml(pubReference, vicinity.lat, vicinity.lng, vicinity.screenSize),
-      success: function (data) {
-        $(data).find('rAdContent').each(function () {
-          vicinity.ad.landingUrl = $(this).find('landingurl').text();
-          vicinity.ad.imgSrc = $(this).find('imgSrc').text();
-          vicinity.ad.width = $(this).find('width').text();
-          vicinity.ad.height = $(this).find('height').text();
-        });
-        done(vicinity);
-      },
-      error: function (xhr) {
-        console.log("Ad not found! Please contact Ad Manager");
-        err(vicinity);
-      }
-    });
+    if(!vicinity.finishedGettingAd) {
+      $.ajax({
+        type: 'POST',
+        contentType: 'application/xml',
+        url: "http://ad.vic-m.co:8080/AdService/Api/xml-api/getAd",
+        dataType: "xml",
+        data: vicinity.formToXml(pubReference, vicinity.lat, vicinity.lng, vicinity.screenSize),
+        success: function (data) {
+          $(data).find('rAdContent').each(function () {
+            vicinity.ad.landingUrl = $(this).find('landingurl').text();
+            vicinity.ad.imgSrc = $(this).find('imgSrc').text();
+            vicinity.ad.width = $(this).find('width').text();
+            vicinity.ad.height = $(this).find('height').text();
+          });
+          done(vicinity);
+        },
+        error: function (xhr) {
+          console.log("Ad not found! Please contact Ad Manager");
+          err(vicinity);
+        }
+      });
+    } else {
+      vicinity.finishedGettingAd = true;
+    }
   };
 
   this.init = function(pubReference, done, err) {
