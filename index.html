@@ -6,19 +6,23 @@
 
     <script type="text/javascript" src="./vicinity.js"></script>
     <script type="text/javascript">
+      var displayResults = function(result) {
+        $('#lat').html(result.lat);
+        $('#lng').html(result.lng);
+        $('#currentScreensize').html(result.screenSize);
+        $('#orientation').html(result.orientation);
+      };
+
       var pubReference = 34;
       new Vicinity (pubReference, function(result) {
         $(function() {
           $("#ad").html(result.ad.getBannerHtml());
 
-          // PRINT OUT RESULTS FOR TESTING
-          $('#lat').html(result.lat);
-          $('#lng').html(result.lng);
-          $('#currentScreensize').html(result.screenSize);
-          $('#orientation').html(result.orientation);
+        displayResults(result);
         })
       }, function(result) {
         console.log(result);
+        displayResults(result);
       });
     </script>
 
