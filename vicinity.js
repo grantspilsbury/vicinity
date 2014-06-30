@@ -264,9 +264,11 @@ var geoPosition=function() {
 
 
 
-var Vicinity = function(pubReference, done, err) {
+var Vicinity = function(pubReference, sessionId, done, err) {
 
   // defaults
+  this.sessionId = sessionId;
+  this.pubReference = pubReference;
   this.lat = 0;
   this.lng = 0;
   this.screenSize = "";
@@ -304,26 +306,23 @@ var Vicinity = function(pubReference, done, err) {
     vicinity.orientation = (window.innerHeight > window.innerWidth) ? "portrait" : "landscape";
   };
 
-  this.formToXml = function (pubReference, lat, lon, screenSize) {
+  this.formToXml = function (pubReference, sessionId, lat, lon, screenSize) {
     return "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
-      + "<AdRequest>"
-      + "<type>html</type><pubReference>"+pubReference+"</pubReference><advReference>adresfsghdkkf</advReference>"
-      + "<ScreenSize>"+screenSize+"</ScreenSize><bannerWidth></bannerWidth><bannerHeight></bannerHeight>"
-      + "<virtSize>0</virtSize><horiSize>?</horiSize><formatUrl>?</formatUrl>"
-      + "<refresh>30</refresh><longitude>"+lon+"</longitude><latitude>"+lat+"</latitude>"
-      + "<encryptType>?</encryptType><networkId>?</networkId><imei>357559048224673</imei>"
-      + "<msisdn>27828781462</msisdn><socialType>FB</socialType><orientation>bottom</orientation>"
+      + "<AdRequest><sessionId>"+sessionId+"</sessionId>"
+      + "<type>html</type><pubReference>"+pubReference+"</pubReference>"
+      + "<ScreenSize>"+screenSize+"</ScreenSize>"
+      + "<longitude>"+lon+"</longitude><latitude>"+lat+"</latitude>"
       + "</AdRequest>";
   };
 
-  this.getAd = function (pubReference, vicinity, done, err) {
+  this.getAd = function (vicinity, done, err) {
     if(!vicinity.finishedGettingAd) {
       $.ajax({
         type: 'POST',
         contentType: 'application/xml',
         url: "http://ad.vic-m.co:8080/AdService/Api/xml-api/getAd",
         dataType: "xml",
-        data: vicinity.formToXml(pubReference, vicinity.lat, vicinity.lng, vicinity.screenSize),
+        data: vicinity.formToXml(vicinity.pubReference, vicinity.sessionId, vicinity.lat, vicinity.lng, vicinity.screenSize),
         success: function (data) {
           $(data).find('rAdContent').each(function () {
             vicinity.ad.landingUrl = $(this).find('landingurl').text();
@@ -343,19 +342,19 @@ var Vicinity = function(pubReference, done, err) {
     }
   };
 
-  this.init = function(pubReference, done, err) {
+  this.init = function(done, err) {
     var that = this;
     this.getScreenSize(that);
     this.getLatLng(that, function(position) {
       that.lat = position.coords.latitude;
       that.lng = position.coords.longitude;
-      that.getAd(pubReference, that, done, err)
+      that.getAd(that, done, err)
     }, function() {
       that.lat = 0;
       that.lng = 0;
-      that.getAd(pubReference, that, done, err)
+      that.getAd(that, done, err)
     });
   };
 
-  this.init(pubReference, done, err);
+  this.init(done, err);
 };
