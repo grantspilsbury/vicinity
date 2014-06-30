@@ -297,8 +297,8 @@ var Vicinity = function(pubReference, sessionId, done, err) {
   };
 
   this.getScreenSize = function(vicinity) {
-    var width = (window.innerWidth > 0) ? window.innerWidth : screen.width;
-    var height = (window.innerHeight > 0) ? window.innerHeight : screen.height;
+    var width = screen.width; // (window.innerWidth > 0) ? window.innerWidth : screen.width;
+    var height = screen.height; //(window.innerHeight > 0) ? window.innerHeight : screen.height;
     vicinity.screenSize = width + "x" + height;
   };
 
