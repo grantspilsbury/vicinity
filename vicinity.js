@@ -303,7 +303,7 @@ var Vicinity = function(pubReference, sessionId, done, err) {
   };
 
   this.getOrientation = function(vicinity) {
-    vicinity.orientation = (screen.height > screen.width) ? "portrait" : "landscape";
+    vicinity.orientation = (window.innerHeight > window.innerWidth) ? "portrait" : "landscape";
   };
 
   this.formToXml = function (pubReference, sessionId, lat, lon, screenSize) {
@@ -345,6 +345,7 @@ var Vicinity = function(pubReference, sessionId, done, err) {
   this.init = function(done, err) {
     var that = this;
     this.getScreenSize(that);
+    this.getOrientation(that);
     this.getLatLng(that, function(position) {
       that.lat = position.coords.latitude;
       that.lng = position.coords.longitude;
