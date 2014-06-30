@@ -264,7 +264,7 @@ var geoPosition=function() {
 
 
 
-var Vicinity = function(pubReference, done) {
+var Vicinity = function(pubReference, done, err) {
 
   // defaults
   this.lat = 0;
@@ -281,29 +281,16 @@ var Vicinity = function(pubReference, done) {
     }
   };
 
-  this.getLatLng = function(vicinity, done) {
+  this.getLatLng = function(vicinity, done, err) {
     if (geoPosition.init()) {  // Geolocation Initialisation
       geoPosition.getCurrentPosition(done, function(e) {
         console.warn('ERROR(' + e.code + '): ' + e.message);
+        err(vicinity);
       }, { enableHighAccuracy:true } );
     } else {
       console.warn("Browser doesn't support Geolocation");
+      err(vicinity);
     }
-    // getViaHtml5 = function(done) {
-    //   if(navigator.geolocation) {
-    //     navigator.geolocation.getCurrentPosition(function(position) {
-    //       vicinity.lat = position.coords.latitude;
-    //       vicinity.lng = position.coords.longitude;
-    //       done();
-    //     }, function(e) {
-    //       console.warn('ERROR(' + e.code + '): ' + e.message);
-    //     });
-    //   } else {
-    //     console.warn("Browser doesn't support Geolocation");
-    //   }
-    // };
-    // getViaHtml5(done);
-
   };
 
   this.getScreenSize = function(vicinity) {
@@ -328,7 +315,7 @@ var Vicinity = function(pubReference, done) {
       + "</AdRequest>";
   };
 
-  this.getAd = function (pubReference, vicinity, done) {
+  this.getAd = function (pubReference, vicinity, done, err) {
     $.ajax({
       type: 'POST',
       contentType: 'application/xml',
@@ -346,21 +333,22 @@ var Vicinity = function(pubReference, done) {
       },
       error: function (xhr) {
         console.log("Ad not found ! Please contact to Ad Manager");
+        err(vicinity);
       }
     });
   };
 
-  this.init = function(pubReference, done) {
+  this.init = function(pubReference, done, err) {
     var that = this;
     this.getScreenSize(that);
     this.getLatLng(that, function(position) {
       console.log(position);
       that.lat = position.coords.latitude;
       that.lng = position.coords.longitude;
-      that.getAd(pubReference, that, done)
-    });
+      that.getAd(pubReference, that, done, err)
+    }, err);
   };
 
-  this.init(pubReference, done);
+  this.init(pubReference, done, err);
 };
 
