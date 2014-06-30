@@ -332,7 +332,7 @@ var Vicinity = function(pubReference, done, err) {
         done(vicinity);
       },
       error: function (xhr) {
-        console.log("Ad not found ! Please contact to Ad Manager");
+        console.log("Ad not found! Please contact Ad Manager");
         err(vicinity);
       }
     });

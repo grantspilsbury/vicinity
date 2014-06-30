@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 
     <script type="text/javascript" src="./vicinity.js"></script>
     <script type="text/javascript">
@@ -17,12 +17,13 @@
       new Vicinity (pubReference, function(result) {
         $(function() {
           $("#ad").html(result.ad.getBannerHtml());
-
-        displayResults(result);
+          displayResults(result);
         })
       }, function(result) {
-        console.log(result);
-        displayResults(result);
+        $(function() {
+          console.log(result);
+          displayResults(result);
+        })
       });
     </script>
 
