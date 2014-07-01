@@ -2,10 +2,11 @@
 
 Copy the vicinity.js file to your server.
 
-Include jquery to your html page if not already included. Note jquery v 1.11.1 is being used as older Blackberry's will not work on the latest version.
+Copy the jquery.min.js file to your server. Note jquery v 1.11.1 is being used as older Blackberry's will not work on the latest version.
 
+Include the jquery file in your html page
 ```html
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script src="./jquery.min.js"></script>
 ```
 
 Make sure you have a div called 'ad' available where you want to display the banner on your html page.
