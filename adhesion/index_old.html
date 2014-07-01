@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script type="text/javascript" src="./jquery.min.js"></script>
+
+
+    <!-- Only needed for demo -->
+    <script type="text/javascript">
+      var displayResults = function(result) {
+        $('#lat').html(result.lat);
+        $('#lng').html(result.lng);
+        $('#currentScreensize').html(result.screenSize);
+        $('#orientation').html(result.orientation);
+        console.log(result);
+      };
+
+    </script>
+
+  </head>
+  <body>
+    <section>
+      Screen size: <span id="currentScreensize"></span>, Orientation: <span id="orientation"></span>, LatxLng: <span id="lat"></span>x<span id="lng"></span>
+    </section>
+
+
+    <!-- Place DIV wherever you want to display your ad -->
+    <div id="ad"></div>
+
+
+    <script type="text/javascript" src="./vicinity.js"></script>
+    <script type="text/javascript">
+
+      var pubReference = 34;
+      var sessionId = "abcd123"; // possibly get from a cookie?
+
+      new Vicinity (pubReference, sessionId, function(result) {
+        // success function
+        $(function() {
+          $("#ad").html(result.ad.getBannerHtml());
+          displayResults(result);
+        })
+      }, function(result) {
+        // error function
+        $(function() {
+          console.log('error');
+          console.log(result);
+          displayResults(result);
+        })
+      });
+
+    </script>
+  </body>
+</html>

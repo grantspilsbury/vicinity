@@ -1,0 +1,22 @@
+{
+    "version": "1.0",
+
+    "title": "IAB Mobile Adhesion", 
+    "description": "The IAB Mobile Adhesion banner.",  
+
+    "width" : "320", 
+    "height": "50", 
+
+    "events": {
+        "enabled": 1,
+        "list": {
+
+        }
+    },
+
+    "clicktags": {
+        "clickTAG": "http://www.adform.com"
+    },
+
+    "source": "index.html"
+}
