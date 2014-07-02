@@ -10,5 +10,11 @@
 }
 
 .advert-img {
-    width: 50%;
+  width: 50%
+  height: auto;
+}
+@media screen and (max-width: 380px) and (orientation: portrait) {
+  .advert-img {
+    width: 100%;
+  }
 }
