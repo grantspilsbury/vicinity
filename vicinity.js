@@ -280,7 +280,7 @@ var Vicinity = function(pubReference, sessionId, done, err) {
     width: null,
     height: null,
     getBannerHtml: function() {
-        return '<a id="ad-link" href=' + this.landingUrl + ' ><span id="banner-ad"><img src=' + this.imgSrc + ' width=' + this.width/2 + ' height="100% " /></a>'
+        return '<a id="ad-link" href=' + this.landingUrl + ' ><span id="banner-ad"><img src=' + this.imgSrc + ' class="advert-img" /></a>'
     }
   };
 
