@@ -280,7 +280,7 @@ var Vicinity = function(pubReference, sessionId, done, err) {
     width: null,
     height: null,
     getBannerHtml: function() {
-      return '<a href=' + this.landingUrl + '><img src=' + this.imgSrc + ' width=' + this.width + ' height=' + this.height + ' /></a>'
+        return '<a id="ad-link" href=' + this.landingUrl + ' ><span id="banner-ad"><img src=' + this.imgSrc + ' width=' + this.width/2 + ' height="100% " /></a>'
     }
   };
 
@@ -297,8 +297,8 @@ var Vicinity = function(pubReference, sessionId, done, err) {
   };
 
   this.getScreenSize = function(vicinity) {
-    var width = screen.width; // (window.innerWidth > 0) ? window.innerWidth : screen.width;
-    var height = screen.height; //(window.innerHeight > 0) ? window.innerHeight : screen.height;
+    var width = (window.innerWidth > 0) ? window.innerWidth : screen.width;
+    var height = (window.innerHeight > 0) ? window.innerHeight : screen.height;
     vicinity.screenSize = width + "x" + height;
   };
 
