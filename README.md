@@ -10,7 +10,7 @@ Include the following between the head tags of your html page
 ```html
   <link rel="stylesheet" type="text/css" href="vicinity.css">
   <script src="./jquery.min.js"></script>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 ```
 
 Add the following between the body tags of your html page.
