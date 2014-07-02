@@ -1,6 +1,7 @@
 #Vicinity
 
 Copy the vicinity.js file to your server.
+
 Copy the vicinity.css file to your server.
 
 Copy the jquery.min.js file to your server. Note jquery v 1.11.1 is being used as older Blackberry's will not work on the latest version.
