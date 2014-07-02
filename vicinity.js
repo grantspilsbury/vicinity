@@ -272,7 +272,7 @@ var Vicinity = function(pubReference, sessionId, done, err) {
   this.lat = 0;
   this.lng = 0;
   this.screenSize = "";
-  this.orientation = "landscape"
+  this.orientation = ""
   this.finishedGettingAd = false;
   this.ad = {
     landingUrl: null,
@@ -296,16 +296,7 @@ var Vicinity = function(pubReference, sessionId, done, err) {
     }
   };
 
-  this.getScreenSize = function(vicinity) {
-    var width = (window.innerWidth > 0) ? window.innerWidth : screen.width;
-    var height = (window.innerHeight > 0) ? window.innerHeight : screen.height;
-    vicinity.screenSize = width + "x" + height;
-  };
-
-  this.getOrientation = function(vicinity) {
-    vicinity.orientation = (screen.height > screen.width) ? "portrait" : "landscape";
-  };
-
+  
   this.formToXml = function (pubReference, sessionId, lat, lon, screenSize) {
     return "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
       + "<AdRequest><sessionId>"+sessionId+"</sessionId>"
@@ -344,8 +335,6 @@ var Vicinity = function(pubReference, sessionId, done, err) {
 
   this.init = function(done, err) {
     var that = this;
-    this.getScreenSize(that);
-    this.getOrientation(that);
     this.getLatLng(that, function(position) {
       that.lat = position.coords.latitude;
       that.lng = position.coords.longitude;
