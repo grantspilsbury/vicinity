@@ -39,14 +39,12 @@
         // success function
         $(function() {
           $("#ad").html(result.ad.getBannerHtml());
-          displayResults(result);
         })
       }, function(result) {
         // error function
         $(function() {
           console.log('error');
           console.log(result);
-          displayResults(result);
         })
       });
 
